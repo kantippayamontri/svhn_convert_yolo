@@ -5,6 +5,7 @@ datasets/
 finish*
 main.ipynb
 .DS_Store
+.ipynb
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

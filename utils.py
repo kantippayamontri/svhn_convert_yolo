@@ -283,6 +283,15 @@ def load_bb(filepath):
     except:
         return None
 
+def convert_xyxy2yolo(bb):
+    cls, x_min, y_min, x_max, y_max = bb[0]
+    w = (x_max-x_min)
+    h = (y_max-y_min)
+    x_c = x_min + (w/2)
+    y_c = y_min + (h/2)
+
+    return np.array([[cls, x_c, y_c, w,h]])
+
 def visualize_samples_for_gauge(source_folder, number_of_samples=10, labels=None): # this function for visulize image from roboflow number format to roboflow gauge format
 
     # TODO: get filenames and bb and labels
@@ -327,11 +336,10 @@ def visualize_samples_for_gauge(source_folder, number_of_samples=10, labels=None
 
         # change from xywh to xyxy format
         for index,_ in enumerate(_bb):
-            _bb_w, _bb_h, _bb_x,  _bb_y = _bb[index][1:]  
-            _bb[0] ,_bb[2] = # for x min , y min
+            _bb_x,  _bb_y, _bb_w, _bb_h,  = _bb[index][1:]  
             # for x max, y max 
-            _bb[index][1], _bb[index][3] = 
-            
+            _bb[index][1], _bb[index][3] = _bb_x - (_bb_w/2), _bb_x + (_bb_w/2)
+            _bb[index][2], _bb[index][4] = _bb_y - (_bb_h/2), _bb_y + (_bb_h/2)
         
         # change xyxy format from range 0-1 to xyxy format from range 0-(image width, image height)
         for index in range(len(_bb)):
